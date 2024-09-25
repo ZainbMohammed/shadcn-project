@@ -1,9 +1,20 @@
+import { useForm, SubmitHandler } from "react-hook-form"
 import React from "react";
-
+type TFormInputs = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 const Signup = () => {
+    const {register,handleSubmit} = useForm<TFormInputs>();
+    const submitForm: SubmitHandler<TFormInputs> = (data) => {
+        console.log(data);
+    };
   return (
     <div className="  py-12 px-4 sm:px-6 lg:px-8">
-      <form className="max-w-sm mx-auto">
+      <form onSubmit={handleSubmit(submitForm)} className="max-w-sm mx-auto">
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium dark:text-white">
             First Name
@@ -13,7 +24,7 @@ const Signup = () => {
             className="bg-gray-50 border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Jone"
             required
-            name="firstName"
+            {...register('firstName')}
           />
         </div>
         <div className="mb-5">
@@ -25,7 +36,7 @@ const Signup = () => {
             className="bg-gray-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
              placeholder="Doe"
             required
-            name="lastName"
+            {...register('lastName')}
           />
         </div>
         <div className="mb-5">
@@ -37,7 +48,7 @@ const Signup = () => {
             className="bg-gray-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
              placeholder="example@gmail.com"
             required
-            name="email"
+            {...register('email')}
           />
         </div>
         <div className="mb-5">
@@ -49,7 +60,7 @@ const Signup = () => {
             className="bg-gray-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
              placeholder="******"
             required
-            name="password"
+            {...register('password')}
           />
         </div>
         <div className="mb-5">
@@ -61,7 +72,7 @@ const Signup = () => {
             className="bg-gray-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
              placeholder=""
             required
-            name="confirmPassword"
+            {...register('confirmPassword')}
           />
         </div>
         <div className="flex items-start mb-5">
