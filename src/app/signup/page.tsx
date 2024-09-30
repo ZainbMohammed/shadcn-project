@@ -1,31 +1,77 @@
-import { useForm, SubmitHandler } from "react-hook-form"
-import React from "react";
-type TFormInputs = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+import { useForm, SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const signupSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, "First Name is required"),
+
+  lastName: z
+    .string()
+    .min(1, { message: "Last Name is required" }),
+
+  email: z
+    .string()
+    .min(1, { message: "email address is required" })
+    .email("Invalid email address"),
+
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character"
+    ),
+
+  confirmPassword: z
+    .string()
+    .min(8, "Password must be at least 8 characters"),
+})
+.refine((data) => data.password === data.confirmPassword, {
+  message: "Password and Confirm Password do not match",
+  path: ["confirmPassword"],
+});
+
+// drfine the type of the form inputs using from schema using z.infer
+type TFormInputs = z.infer<typeof signupSchema>;
+
+// type TFormInputs = {
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   password: string;
+//   confirmPassword: string;
+// };
 const Signup = () => {
-    const {register,handleSubmit} = useForm<TFormInputs>();
-    const submitForm: SubmitHandler<TFormInputs> = (data) => {
-        console.log(data);
-    };
+  const { register, handleSubmit ,formState: { errors } } = useForm<TFormInputs>({
+    resolver: zodResolver(signupSchema),
+    mode: 'onBlur',
+  });
+  const submitForm: SubmitHandler<TFormInputs> = (data) => {
+    console.log(data);
+  };
   return (
     <div className="  py-12 px-4 sm:px-6 lg:px-8">
       <form onSubmit={handleSubmit(submitForm)} className="max-w-sm mx-auto">
         <div className="mb-5">
-          <label className="block mb-2 text-sm font-medium dark:text-white">
+        <label className="block mb-2 text-sm font-medium dark:text-white">
             First Name
           </label>
           <input
             type="text"
-            className="bg-gray-50 border border-gray-300  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className={`bg-gray-50 border ${
+              errors.firstName ? "border-red-500" : "border-gray-300"
+            } text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
             placeholder="Jone"
-            required
-            {...register('firstName')}
+            {...register("firstName")}
           />
+          {errors.firstName && (
+            <p className="mt-1 text-xs text-red-600">
+              {errors.firstName.message}
+            </p>
+          )}
+
         </div>
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium   dark:text-white">
@@ -34,9 +80,9 @@ const Signup = () => {
           <input
             type="text"
             className="bg-gray-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-             placeholder="Doe"
+            placeholder="Doe"
             required
-            {...register('lastName')}
+            {...register("lastName")}
           />
         </div>
         <div className="mb-5">
@@ -46,33 +92,33 @@ const Signup = () => {
           <input
             type="text"
             className="bg-gray-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-             placeholder="example@gmail.com"
+            placeholder="example@gmail.com"
             required
-            {...register('email')}
+            {...register("email")}
           />
         </div>
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium   dark:text-white">
-           Password
+            Password
           </label>
           <input
             type="text"
             className="bg-gray-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-             placeholder="******"
+            placeholder="******"
             required
-            {...register('password')}
+            {...register("password")}
           />
         </div>
         <div className="mb-5">
           <label className="block mb-2 text-sm font-medium   dark:text-white">
-           Confirm Password
+            Confirm Password
           </label>
           <input
             type="text"
             className="bg-gray-50 border border-gray-300   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-             placeholder=""
+            placeholder=""
             required
-            {...register('confirmPassword')}
+            {...register("confirmPassword")}
           />
         </div>
         <div className="flex items-start mb-5">
