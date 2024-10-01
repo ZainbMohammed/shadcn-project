@@ -1,16 +1,9 @@
 'use client'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema , type TSignupInputs } from "@validations/signupSchema";
+import { signupSchema , type TSignupInputs } from "@/validations/signupSchema";
 
 
-// type TFormInputs = {
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   password: string;
-//   confirmPassword: string;
-// };
 const Signup = () => {
   const { register, handleSubmit ,formState: { errors } } = useForm<TSignupInputs>({
     resolver: zodResolver(signupSchema),
