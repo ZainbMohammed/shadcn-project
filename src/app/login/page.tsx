@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Login = () => {
+    // from anothser account
   return (
     <div className="  py-12 px-4 sm:px-6 lg:px-8">
       <form className="max-w-sm mx-auto">
