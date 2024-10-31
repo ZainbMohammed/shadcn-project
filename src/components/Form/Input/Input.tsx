@@ -1,5 +1,6 @@
 import { Path, FieldValues, UseFormRegister } from "react-hook-form";
 
+// define the prop types
 type TInputProps<TFieldValue extends FieldValues> = {
     label: string;
   name: Path<TFieldValue>;
